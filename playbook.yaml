@@ -2,7 +2,7 @@
   hosts: all
   become: true
   tasks:
-  - name: "ensure Amit user exists"
+  - name: "ensure majed user exists"
     user:
       name: majed
       state: absent
