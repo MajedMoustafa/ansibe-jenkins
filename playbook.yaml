@@ -5,7 +5,7 @@
   - name: "ensure majed user exists"
     user:
       name: majed
-      state: present
+      state: absent
   - name: "ensure Alex user exists"
     user:
       name: alex
