@@ -1,6 +1,4 @@
-- name: >-
-    clone the GitHub repository and installs Maven and run build on Jenkins
-    Server
+- name: "clone the GitHub repository and installs Maven and run build on Jenkins Server"
   hosts: jenkins
   become: true
   vars: null
@@ -30,9 +28,7 @@
       shell: echo 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> /etc/environment
     - name: Run Maven Build
       shell: cd /var/lib/jenkins/workspace/addressbook && mvn clean install
-- name: >-
-    deploys the WAR file to a Tomcat web container and restarts the web
-    container service on worker 1 machine
+- name: "deploys the WAR file to a Tomcat web container and restarts the web container service on worker 1 machine"
   hosts: worker1
   war_file: addressbook.war
   tomcat_webapps_dir: /var/lib/tomcat9/webapps
