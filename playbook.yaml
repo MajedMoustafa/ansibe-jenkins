@@ -1,50 +1,53 @@
-- name: "clone the GitHub repository and installs Maven and run build on Jenkins Server"
+- name: >-
+    clone the GitHub repository and installs Maven and run build on Jenkins
+    Server
   hosts: jenkins
   become: true
-  vars:
-  git_repo: https://github.com/MajedMoustafa/addressbook.git
+  vars: null
+  git_repo: 'https://github.com/MajedMoustafa/addressbook.git'
   tasks:
-  - name: Install Git
-    apt:
-      name: git
-      state: present
-      update_cache: yes
-  - name: Clone Git Repository
-    git:
-      repo: "{{ git_repo }}"
-      dest: /var/lib/jenkins/workspace/addressbook
-      update_cache: yes
-  - name: Install Java 11
-    apt:
-      name: openjdk-11-jdk
-      state: present
-      update_cache: yes      
-  - name: Install Maven
-    apt:
-      name: maven
-      state: present    
-      update_cache: yes
-  - name: Set JAVA_HOME environment variable
-    shell: "echo 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> /etc/environment"
-  - name: Run Maven Build
-    shell: "cd /var/lib/jenkins/workspace/addressbook && mvn clean install"
-- name: "deploys the WAR file to a Tomcat web container and restarts the web container service on worker 1 machine"    
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+        update_cache: 'yes'
+    - name: Clone Git Repository
+      git:
+        repo: '{{ git_repo }}'
+        dest: /var/lib/jenkins/workspace/addressbook
+        update_cache: 'yes'
+    - name: Install Java 11
+      apt:
+        name: openjdk-11-jdk
+        state: present
+        update_cache: 'yes'
+    - name: Install Maven
+      apt:
+        name: maven
+        state: present
+        update_cache: 'yes'
+    - name: Set JAVA_HOME environment variable
+      shell: echo 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> /etc/environment
+    - name: Run Maven Build
+      shell: cd /var/lib/jenkins/workspace/addressbook && mvn clean install
+- name: >-
+    deploys the WAR file to a Tomcat web container and restarts the web
+    container service on worker 1 machine
   hosts: worker1
   war_file: addressbook.war
   tomcat_webapps_dir: /var/lib/tomcat9/webapps
   tomcat_service: tomcat9
   tasks:
-  - name: Install Tomcat 9
-    apt:
-     name: tomcat9
-     state: present
-     update_cache: yes
-  - name: Copy WAR file to Tomcat webapps directory
-    copy:
-      src: "{{ war_file }}"
-      dest: "{{ tomcat_webapps_dir }}"
-  - name: Restart Tomcat service
-    service:
-      name: "{{ tomcat_service }}"
-      state: restarted
-      
+    - name: Install Tomcat 9
+      apt:
+        name: tomcat9
+        state: present
+        update_cache: 'yes'
+    - name: Copy WAR file to Tomcat webapps directory
+      copy:
+        src: '{{ war_file }}'
+        dest: '{{ tomcat_webapps_dir }}'
+    - name: Restart Tomcat service
+      service:
+        name: '{{ tomcat_service }}'
+        state: restarted
