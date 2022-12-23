@@ -29,7 +29,7 @@
   - name: Run Maven Build
     shell: "cd /var/lib/jenkins/workspace/addressbook && mvn clean install"
 - name: "deploys the WAR file to a Tomcat web container and restarts the web container service on worker 1 machine"    
-  hosts: web
+  hosts: worker1
   war_file: addressbook.war
   tomcat_webapps_dir: /var/lib/tomcat9/webapps
   tomcat_service: tomcat9
