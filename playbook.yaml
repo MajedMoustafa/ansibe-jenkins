@@ -1,13 +1,50 @@
-- name: "manage worker1 and 2"
-  hosts: all
+- name: "clone the GitHub repository and installs Maven and run build on Jenkins Server"
+  hosts: jenkins
   become: true
+  vars:
+  git_repo: https://github.com/MajedMoustafa/addressbook.git
   tasks:
-  - name: "ensure majed user exists"
-    user:
-      name: majed
-      state: absent
-  - name: "ensure Alex user exists"
-    user:
-      name: alex
-      state: absent
+  - name: Install Git
+    apt:
+      name: git
+      state: present
+      update_cache: yes
+  - name: Clone Git Repository
+    git:
+      repo: "{{ git_repo }}"
+      dest: /var/lib/jenkins/workspace/addressbook
+      update_cache: yes
+  - name: Install Java 11
+    apt:
+      name: openjdk-11-jdk
+      state: present
+      update_cache: yes      
+  - name: Install Maven
+    apt:
+      name: maven
+      state: present    
+      update_cache: yes
+  - name: Set JAVA_HOME environment variable
+    shell: "echo 'JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> /etc/environment"
+  - name: Run Maven Build
+    shell: "cd /var/lib/jenkins/workspace/addressbook && mvn clean install"
+- name: "deploys the WAR file to a Tomcat web container and restarts the web container service on worker 1 machine"    
+  hosts: web
+  war_file: addressbook.war
+  tomcat_webapps_dir: /var/lib/tomcat9/webapps
+  tomcat_service: tomcat9
+  tasks:
+  - name: Install Tomcat 9
+    apt:
+     name: tomcat9
+     state: present
+     update_cache: yes
+  - name: Copy WAR file to Tomcat webapps directory
+    copy:
+      src: "{{ war_file }}"
+      dest: "{{ tomcat_webapps_dir }}"
+  - name: Restart Tomcat service
+    service:
+      name: "{{ tomcat_service }}"
+      state: restarted
       
