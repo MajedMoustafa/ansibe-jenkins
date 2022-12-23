@@ -30,7 +30,7 @@
 - name: "deploys the WAR file"
   hosts: worker1
   vars:  
-    war_file: addressbook.war
+    war_file: /var/lib/jenkins/workspace/addressbook/addressbook-2.0.war
     tomcat_webapps_dir: /var/lib/tomcat9/webapps
     tomcat_service: tomcat9
   tasks:
