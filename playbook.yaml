@@ -1,8 +1,8 @@
 - name: "run build on Jenkins Server"
   hosts: jenkins
   become: true
-  vars: null
-  git_repo: 'https://github.com/MajedMoustafa/addressbook.git'
+  vars:
+    git_repo: 'https://github.com/MajedMoustafa/addressbook.git'
   tasks:
     - name: Install Git
       apt:
@@ -30,9 +30,10 @@
       shell: cd /var/lib/jenkins/workspace/addressbook && mvn clean install
 - name: "deploys the WAR file"
   hosts: worker1
-  war_file: addressbook.war
-  tomcat_webapps_dir: /var/lib/tomcat9/webapps
-  tomcat_service: tomcat9
+  vars:  
+    war_file: addressbook.war
+    tomcat_webapps_dir: /var/lib/tomcat9/webapps
+    tomcat_service: tomcat9
   tasks:
     - name: Install Tomcat 9
       apt:
