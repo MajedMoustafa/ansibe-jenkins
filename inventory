@@ -1,2 +1,3 @@
+jenkins ansible_host=ip-172-31-53-60 
 worker1 ansible_host=ip-172-31-61-198
 worker2 ansible_host=ip-172-31-51-39
