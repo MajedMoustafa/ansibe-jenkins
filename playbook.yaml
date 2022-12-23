@@ -31,7 +31,7 @@
   hosts: worker1
   become: true  
   vars:  
-    war_file: /var/lib/jenkins/workspace/addressbook/addressbook-2.0.war
+    war_file: /var/lib/jenkins/workspace/addressbook/target/addressbook-2.0.war
     tomcat_webapps_dir: /var/lib/tomcat9/webapps
     tomcat_service: tomcat9
   tasks:
